@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import TablePage from './pages/TablePage';
 import DetailPage from './pages/DetailPage';
+import OptimizationDashboard from './pages/OptimizationDashboard';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
               </div>
               <div className="flex space-x-4">
                 <Link to="/" className="px-3 py-2 rounded-md font-medium hover:bg-indigo-500 transition-colors">Dashboard</Link>
+                <Link to="/optimization" className="px-3 py-2 rounded-md font-medium hover:bg-indigo-500 transition-colors">Optimization Engine</Link>
                 <Link to="/msmes" className="px-3 py-2 rounded-md font-medium hover:bg-indigo-500 transition-colors">MSME List</Link>
               </div>
             </div>
@@ -24,6 +26,7 @@ function App() {
         <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <Routes>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/optimization" element={<OptimizationDashboard />} />
             <Route path="/msmes" element={<TablePage />} />
             <Route path="/msme/:id" element={<DetailPage />} />
           </Routes>

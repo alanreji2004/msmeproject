@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from model.train import train_model
 from model.predict import get_predictions, get_prediction_by_id
+from data.optimization_engine import run_optimization
 
 app = FastAPI()
 
@@ -36,5 +37,13 @@ async def msme(id: str):
         if prediction:
             return prediction
         raise HTTPException(status_code=404, detail="MSME not found")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/optimize")
+async def optimize(budget: float = 100000000, w_rev: float = 0.5, w_emp: float = 0.5):
+    try:
+        results = run_optimization(budget, w_rev, w_emp)
+        return results
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
