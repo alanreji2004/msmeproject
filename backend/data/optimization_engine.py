@@ -48,8 +48,16 @@ def run_optimization(budget, w_rev, w_emp):
                 })
 
     if not allocations:
-        print("No eligible allocations found.")
-        return
+        return {
+            "summary": {
+                "Total_Budget_Initial": budget,
+                "Total_Budget_Spent": 0,
+                "Total_Budget_Remaining": budget,
+                "Total_MSMEs_Funded": 0,
+                "Total_Projected_Jobs_Created": 0
+            },
+            "allocations": []
+        }
 
     alloc_df = pd.DataFrame(allocations)
     
@@ -84,28 +92,31 @@ def run_optimization(budget, w_rev, w_emp):
             
     # 3. Output logic matching Phase 4 specifications
     if not selected_allocations:
-        print("Budget is too low to fund any schemes combinations.")
-        return
+        return {
+            "summary": {
+                "Total_Budget_Initial": budget,
+                "Total_Budget_Spent": 0,
+                "Total_Budget_Remaining": budget,
+                "Total_MSMEs_Funded": 0,
+                "Total_Projected_Jobs_Created": 0
+            },
+            "allocations": []
+        }
         
     final_df = pd.DataFrame(selected_allocations)
     output_df = final_df[['MSME_ID', 'Scheme_Name', 'Optimization_Score', 'Subsidy_Cost', 'Before_Revenue', 'After_Revenue', 'Jobs_Created']]
     
-    print("\n" + "="*80)
-    print(f"BUDGET-CONSTRAINED OPTIMIZATION RESULTS")
-    print(f"Total Budget Initial: ₹{budget:,.2f}")
-    print(f"Total Budget Spent: ₹{(budget - current_budget):,.2f}")
-    print(f"Total Budget Remaining: ₹{current_budget:,.2f}")
-    print(f"Total MSMEs Funded: {len(selected_allocations)}")
-    print(f"Total Projected Jobs Created: {final_df['Jobs_Created'].sum()}")
-    print("="*80 + "\n")
-    
-    pd.set_option('display.max_columns', None)
-    pd.set_option('display.width', 1000)
-    pd.set_option('display.float_format', lambda x: '%.2f' % x)
-    print("OPTIMIZED ALLOCATIONS (Ranked):")
-    print(output_df.to_string(index=False))
-    print("\n")
-
+    # Return a dictionary suitable for JSON serialization
+    return {
+        "summary": {
+            "Total_Budget_Initial": budget,
+            "Total_Budget_Spent": budget - current_budget,
+            "Total_Budget_Remaining": current_budget,
+            "Total_MSMEs_Funded": len(selected_allocations),
+            "Total_Projected_Jobs_Created": int(final_df['Jobs_Created'].sum()) if not final_df.empty else 0
+        },
+        "allocations": output_df.to_dict(orient="records")
+    }
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run Phase 4: Budget-Constrained Scheme Optimization.")
