@@ -73,10 +73,53 @@ python optimization_engine.py --budget 50000000.0 --w_rev 0.5 --w_emp 0.5
 python optimization_engine.py --budget 5000000.0 --w_rev 0.7 --w_emp 0.3
 
 # Example 3: Prioritizing 100% on Job Creation
+# Example 3: Prioritizing 100% on Job Creation
 python optimization_engine.py --budget 20000000 --w_rev 0 --w_emp 1
 ```
 
-### 4. Running the Frontend
+### 5. Phase 5: Dashboard, Transparency, and System Integration
+
+Phase 5 finalizes the full-stack system by bridging the optimization engine directly into a functional, highly professional enterprise React dashboard (`/optimization`).
+
+**Key Features of Phase 5:**
+1. **Interactive Optimization Panel:** Users can dynamically drag revenue and employment sliders and adjust the total subsidy budget in the browser, instantly triggering re-allocations.
+2. **Transparent Decision-Making (Rejected MSMEs):** The algorithm tracks every MSME evaluated. If an MSME is eligible but rejected due to budget constraints, it is logged with the specific deficit reason ("Insufficient Budget: Required ₹X"). If ineligible, it is marked accordingly.
+3. **Sector-wise Impact Summaries:** The engine aggregates the total MSMEs approved, jobs created, and budget spent per sector (e.g., IT, Manufacturing, Retail) to visualize economic impact distribution.
+4. **Unified SaaS Design System:** The entire application (Dashboard, Directory, MSME details, and Engine) shares a polished, modern, enterprise-grade Slate and Blue aesthetic utilizing CSS modules and Tailwind.
+
+### 6. Installation & Deployment on a New Device
+
+To run the complete system (Backend and Frontend) on another machine, follow these steps:
+
+#### Step 1: Clone the Repository
+```bash
+git clone https://github.com/alanreji2004/msmeproject.git
+cd msmeproject
+```
+
+#### Step 2: Start the Backend server
+The backend requires Python 3.8+.
+```bash
+cd backend
+pip install -r requirements.txt
+python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+```
+Keep this terminal window running.
+
+#### Step 3: Start the Frontend server
+Open a **new** terminal window. The frontend requires Node.js (v18+ recommended).
+```bash
+cd msmeproject/frontend
+npm install
+npm run dev
+```
+
+#### Step 4: Access the Application
+Open your web browser and navigate to the frontend URL provided in the terminal (usually `http://localhost:5173` or `http://localhost:5174`).
+The API calls will connect locally to your running backend at `localhost:8000`.
+
+---
+
 
 The frontend is a React SPA built with Vite.
 

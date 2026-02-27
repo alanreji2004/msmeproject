@@ -42,23 +42,23 @@ export default function TablePage() {
     );
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+        <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+            <div className="p-5 border-b border-slate-200 flex justify-between items-center bg-white">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-800">MSME Directory</h1>
-                    <p className="text-sm text-gray-500 mt-1">View all businesses and their growth predictions</p>
+                    <h1 className="text-xl font-bold text-slate-900 border-l-4 border-blue-600 pl-3">MSME Directory</h1>
+                    <p className="text-sm text-slate-500 mt-1 pl-4">View all businesses and their growth predictions</p>
                 </div>
 
                 <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Search className="h-4 w-4 text-gray-400" />
+                        <Search className="h-4 w-4 text-slate-400" />
                     </div>
                     <input
                         type="text"
                         placeholder="Search ID or Sector..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 w-64 shadow-sm"
+                        className="pl-9 pr-4 py-2 border border-slate-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500 w-64 text-sm bg-slate-50 text-slate-900"
                     />
                 </div>
             </div>
@@ -83,17 +83,14 @@ export default function TablePage() {
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
                             {filteredMsmes.map((msme) => (
-                                <tr key={msme.MSME_ID} className="hover:bg-indigo-50/50 transition-colors cursor-pointer group">
+                                <tr key={msme.MSME_ID} className="bg-white hover:bg-slate-50 transition-colors cursor-pointer group border-b border-slate-100">
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center">
-                                            <div className="flex-shrink-0 h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-xs">
-                                                {msme.MSME_ID.split('_')[1] || '?'}
-                                            </div>
-                                            <div className="ml-4 font-medium text-gray-900">{msme.MSME_ID}</div>
+                                            <div className="ml-2 font-semibold text-blue-600 text-sm">{msme.MSME_ID}</div>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{msme.Sector}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-medium">₹{(msme.Annual_Revenue / 100000).toFixed(1)}L</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-700">{msme.Sector}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-700 font-medium">₹{(msme.Annual_Revenue / 100000).toFixed(1)}L</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                                         <span className={getCategoryColor(msme.Predicted_Growth_Category)}>
                                             {msme.Predicted_Growth_Category}
@@ -101,12 +98,12 @@ export default function TablePage() {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-center">
                                         <div className="flex flex-col items-center">
-                                            <span className={`px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full border ${getScoreColor(msme.Growth_Score)}`}>
+                                            <span className={`px-2 py-0.5 inline-flex text-xs font-bold rounded-md border ${getScoreColor(msme.Growth_Score)}`}>
                                                 {msme.Growth_Score?.toFixed(1)}
                                             </span>
-                                            <div className="w-16 bg-gray-200 rounded-full h-1.5 mt-2">
+                                            <div className="w-16 bg-slate-200 rounded-full h-1 mt-2">
                                                 <div
-                                                    className="bg-indigo-600 h-1.5 rounded-full"
+                                                    className="bg-blue-600 h-1 rounded-full"
                                                     style={{ width: `${msme.Growth_Score}%` }}
                                                 ></div>
                                             </div>
@@ -115,7 +112,7 @@ export default function TablePage() {
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <Link
                                             to={`/msme/${msme.MSME_ID}`}
-                                            className="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-md transition-colors flex justify-end items-center opacity-0 group-hover:opacity-100"
+                                            className="text-slate-600 hover:text-blue-600 px-3 py-1.5 rounded-md transition-colors flex justify-end items-center opacity-0 group-hover:opacity-100"
                                         >
                                             Details <ChevronRight className="w-4 h-4 ml-1" />
                                         </Link>

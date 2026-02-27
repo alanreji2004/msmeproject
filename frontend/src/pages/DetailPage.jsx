@@ -31,8 +31,8 @@ export default function DetailPage() {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-64 text-indigo-600">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+            <div className="flex justify-center items-center h-64 text-blue-600">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
             </div>
         );
     }
@@ -41,7 +41,7 @@ export default function DetailPage() {
         return (
             <div className="bg-red-50 p-6 rounded-xl border border-red-100 flex flex-col items-center">
                 <div className="text-red-500 mb-4">{error}</div>
-                <Link to="/msmes" className="text-indigo-600 hover:underline flex items-center">
+                <Link to="/msmes" className="text-blue-600 hover:underline flex items-center">
                     <ArrowLeft className="w-4 h-4 mr-2" /> Back to Directory
                 </Link>
             </div>
@@ -79,13 +79,13 @@ export default function DetailPage() {
     };
 
     const InfoCard = ({ icon: Icon, label, value }) => (
-        <div className="flex items-start p-4 bg-gray-50 rounded-lg border border-gray-100">
-            <div className="p-2 bg-white rounded-md shadow-sm border border-gray-100 text-indigo-500 mr-4">
+        <div className="flex items-start p-4 bg-slate-50 rounded-lg border border-slate-200">
+            <div className="p-2 bg-white rounded-md shadow-sm border border-slate-200 text-blue-600 mr-4">
                 <Icon className="w-5 h-5" />
             </div>
             <div>
-                <p className="text-sm text-gray-500 font-medium">{label}</p>
-                <p className="text-lg font-semibold text-gray-800">{value}</p>
+                <p className="text-sm text-slate-500 font-medium">{label}</p>
+                <p className="text-lg font-semibold text-slate-800">{value}</p>
             </div>
         </div>
     );
@@ -93,11 +93,11 @@ export default function DetailPage() {
     return (
         <div className="max-w-5xl mx-auto space-y-6">
             <div className="flex items-center space-x-4 mb-6">
-                <Link to="/msmes" className="p-2 bg-white rounded-full text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 transition-colors shadow-sm">
+                <Link to="/msmes" className="p-2 bg-white rounded-full text-slate-500 hover:text-blue-600 hover:bg-slate-50 transition-colors shadow-sm">
                     <ArrowLeft className="w-5 h-5" />
                 </Link>
-                <h1 className="text-3xl font-bold text-gray-900 tracking-tight">MSME Details</h1>
-                <span className="px-3 py-1 bg-indigo-100 text-indigo-800 text-sm font-bold rounded-full ml-auto">
+                <h1 className="text-3xl font-bold text-slate-900 tracking-tight">MSME Details</h1>
+                <span className="px-3 py-1 bg-slate-100 text-slate-800 text-sm font-bold rounded-full ml-auto">
                     {original_data.MSME_ID}
                 </span>
             </div>
@@ -128,8 +128,8 @@ export default function DetailPage() {
                 {/* Right Column: Business Profile */}
                 <div className="col-span-1 lg:col-span-2 space-y-6">
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                        <h3 className="text-xl font-bold text-gray-800 mb-4 border-b border-gray-100 pb-3 flex items-center">
-                            <Building className="w-5 h-5 mr-2 text-indigo-500" />
+                        <h3 className="text-xl font-bold text-slate-800 mb-4 border-b border-slate-200 pb-3 flex items-center">
+                            <Building className="w-5 h-5 mr-2 text-blue-500" />
                             Company Profile
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -142,22 +142,22 @@ export default function DetailPage() {
                         </div>
                     </div>
 
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                        <h3 className="text-xl font-bold text-gray-800 mb-4 border-b border-gray-100 pb-3">Key Predictive Factors</h3>
+                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                        <h3 className="text-xl font-bold text-slate-800 mb-4 border-b border-slate-200 pb-3">Key Predictive Factors</h3>
                         <div className="space-y-4">
                             {Object.entries(top_important_features).map(([feature, importance], index) => (
                                 <div key={feature} className="relative">
                                     <div className="flex justify-between items-end mb-1">
-                                        <span className="text-sm font-semibold text-gray-700">
+                                        <span className="text-sm font-semibold text-slate-700">
                                             {index + 1}. {feature.replace(/_/g, ' ')}
                                         </span>
-                                        <span className="text-sm font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">
+                                        <span className="text-sm font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
                                             {(importance * 100).toFixed(1)}%
                                         </span>
                                     </div>
-                                    <div className="w-full bg-gray-100 rounded-full h-2">
+                                    <div className="w-full bg-slate-100 rounded-full h-2">
                                         <div
-                                            className="bg-gradient-to-r from-indigo-500 to-purple-500 h-2 rounded-full transition-all duration-1000 ease-out"
+                                            className="bg-blue-500 h-2 rounded-full transition-all duration-1000 ease-out"
                                             style={{ width: `${importance * 100}%` }}
                                         ></div>
                                     </div>

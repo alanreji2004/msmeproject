@@ -542,3 +542,98 @@
     font-size: 0.95rem;
     line-height: 1.5;
 }
+
+/* Tabs */
+.tabsContainer {
+    display: flex;
+    gap: 1rem;
+    padding: 0 2rem 1rem 2rem;
+    border-bottom: 1px solid #e2e8f0;
+    background: #ffffff;
+}
+
+.tabBtn {
+    background: transparent;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tabBtn:hover {
+    color: #0f172a;
+}
+
+.tabActive {
+    color: #2563eb;
+    border-bottom: 2px solid #2563eb;
+}
+
+/* Rejected Styles */
+.statusFail {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    color: #dc2626;
+    /* Red 600 */
+    font-weight: 700;
+    font-size: 0.75rem;
+    background: #fef2f2;
+    /* Red 50 */
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+    border: 1px solid #fca5a5;
+    /* Red 300 */
+}
+
+/* Sector Summary Grid */
+.sectorGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem;
+}
+
+.sectorCard {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.sectorName {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sectorStatRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+}
+
+.sectorStatLabel {
+    color: #64748b;
+    font-weight: 600;
+}
+
+.sectorStatValue {
+    font-weight: 700;
+    color: #334155;
+}

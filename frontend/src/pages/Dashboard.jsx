@@ -87,13 +87,13 @@ export default function Dashboard() {
         <div className="space-y-6">
             <div className="flex justify-between items-center bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <div>
-                    <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">Model Dashboard</h1>
-                    <p className="text-gray-500 mt-1">Train and evaluate the Random Forest model</p>
+                    <h1 className="text-2xl font-bold text-slate-900">Model Dashboard</h1>
+                    <p className="text-slate-500 mt-1">Train and evaluate the Random Forest model</p>
                 </div>
                 <button
                     onClick={handleTrain}
                     disabled={loading}
-                    className={`flex items-center px-6 py-3 rounded-lg text-white font-medium transition-all shadow-md hover:shadow-lg ${loading ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 active:scale-95'
+                    className={`flex items-center px-6 py-3 rounded-lg text-white font-medium transition-all shadow-sm hover:shadow-md ${loading ? 'bg-slate-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 active:scale-95'
                         }`}
                 >
                     {loading ? (
@@ -119,31 +119,31 @@ export default function Dashboard() {
 
             {metrics && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-center transform transition-transform hover:scale-[1.02]">
+                    <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-center transform transition-transform hover:scale-[1.01]">
                         <div className="flex items-center space-x-3 mb-4">
-                            <div className="p-3 bg-green-100 rounded-lg text-green-600">
+                            <div className="p-3 bg-emerald-50 rounded-lg text-emerald-600">
                                 <CheckCircle className="w-6 h-6" />
                             </div>
-                            <h2 className="text-xl font-bold text-gray-800">Model Accuracy</h2>
+                            <h2 className="text-lg font-bold text-slate-800">Model Accuracy</h2>
                         </div>
-                        <div className="text-5xl font-extrabold text-indigo-600 mt-2">
-                            {(metrics.accuracy * 100).toFixed(1)}<span className="text-2xl text-indigo-400">%</span>
+                        <div className="text-5xl font-extrabold text-blue-600 mt-2">
+                            {(metrics.accuracy * 100).toFixed(1)}<span className="text-2xl text-blue-400">%</span>
                         </div>
-                        <p className="text-sm text-gray-500 mt-4">Based on initial 80/20 train-test split</p>
+                        <p className="text-sm text-slate-500 mt-4">Based on initial 80/20 train-test split</p>
                     </div>
 
-                    <div className="md:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-gray-100 min-h-[400px]">
-                        {chartData && <Bar data={chartData} options={chartOptions} />}
+                    <div className="md:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-slate-200 min-h-[400px]">
+                        {chartData && <Bar data={chartData} options={{ ...chartOptions, plugins: { ...chartOptions.plugins, title: { display: true, text: 'Top 10 Feature Importances', font: { size: 14 }, color: '#334155' } } }} />}
                     </div>
 
-                    <div className="md:col-span-3 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                        <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
-                            <span className="w-2 h-6 bg-indigo-500 rounded-full mr-3"></span>
+                    <div className="md:col-span-3 bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                        <h2 className="text-lg font-bold text-slate-800 mb-6 flex items-center">
+                            <span className="w-1.5 h-6 bg-blue-500 rounded-sm mr-3"></span>
                             Confusion Matrix
                         </h2>
-                        <div className="overflow-x-auto rounded-lg border border-gray-200">
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gray-50">
+                        <div className="overflow-x-auto rounded-lg border border-slate-200">
+                            <table className="min-w-full divide-y divide-slate-200">
+                                <thead className="bg-slate-50">
                                     <tr>
                                         <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 tracking-wider">True \ Predicted</th>
                                         <th className="px-6 py-4 text-center text-xs font-semibold text-gray-600 tracking-wider">Low</th>

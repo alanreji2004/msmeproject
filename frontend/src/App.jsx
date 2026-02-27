@@ -8,16 +8,16 @@ function App() {
   return (
     <Router>
       <div className="min-h-screen bg-gray-50 flex flex-col w-full">
-        <nav className="bg-indigo-600 text-white shadow-lg w-full">
+        <nav className="bg-slate-800 text-white shadow-lg w-full">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center">
                 <span className="font-bold text-xl tracking-wider">MSME Predictor</span>
               </div>
               <div className="flex space-x-4">
-                <Link to="/" className="px-3 py-2 rounded-md font-medium hover:bg-indigo-500 transition-colors">Dashboard</Link>
-                <Link to="/optimization" className="px-3 py-2 rounded-md font-medium hover:bg-indigo-500 transition-colors">Optimization Engine</Link>
-                <Link to="/msmes" className="px-3 py-2 rounded-md font-medium hover:bg-indigo-500 transition-colors">MSME List</Link>
+                <Link to="/" className="px-3 py-2 rounded-md font-medium hover:bg-slate-700 transition-colors">Dashboard </Link>
+                <Link to="/optimization" className="px-3 py-2 rounded-md font-medium hover:bg-slate-700 transition-colors">Optimization Engine </Link>
+                <Link to="/msmes" className="px-3 py-2 rounded-md font-medium hover:bg-slate-700 transition-colors">MSME List</Link>
               </div>
             </div>
           </div>
