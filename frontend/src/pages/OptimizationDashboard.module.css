@@ -1,20 +1,7 @@
 /* OptimizationDashboard.module.css */
 
-.pageWrapper {
-    min-height: 100vh;
-    background: #f1f5f9;
-    /* Slate 100 */
-    color: #0f172a;
-    /* Slate 900 */
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    padding: 2rem;
-    display: flex;
-    justify-content: center;
-}
-
 .dashboardContainer {
     width: 100%;
-    max-width: 1400px;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
@@ -83,6 +70,10 @@
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
+    position: sticky;
+    top: 5.5rem;
+    /* Stays fixed below the top navbar */
+    align-self: start;
 }
 
 .controlCard {
@@ -340,7 +331,89 @@
 .resultsArea {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 180px);
+    padding: 2rem;
+}
+
+.resultsContent {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Table Section Wrapper */
+.tableSection {
+    background: #ffffff;
+    border-radius: 0.75rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Tab Navigation */
+.tabsContainer {
+    display: flex;
+    border-bottom: 1px solid #e2e8f0;
+    background: #fcfcfc;
+    /* Extremely pale gray */
+}
+
+.tabButton {
+    padding: 1rem 1.75rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: #64748b;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: -1px;
+    /* Overlap border */
+}
+
+.tabButton:hover {
+    color: #334155;
+    background: #f8fafc;
+}
+
+.tabButtonAllocatedActive {
+    border-bottom-color: #4f46e5;
+    color: #4f46e5;
+    background: #ffffff;
+}
+
+.tabButtonRejectedActive {
+    border-bottom-color: #e11d48;
+    color: #e11d48;
+    background: #ffffff;
+}
+
+.tabBadge {
+    font-size: 0.75rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 9999px;
+    font-weight: 700;
+    margin-left: 0.25rem;
+}
+
+.badgeAllocated {
+    background: #e0e7ff;
+    color: #4338ca;
+}
+
+.badgeRejected {
+    background: #ffe4e6;
+    color: #be123c;
+}
+
+.badgeInactive {
+    background: #f1f5f9;
+    color: #64748b;
 }
 
 .tableHeader {
@@ -372,21 +445,38 @@
     /* Pill */
 }
 
+.rejectedBadge {
+    color: #e11d48;
+    /* Rose 600 */
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #ffe4e6;
+    /* Rose 50 */
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+    /* Pill */
+}
+
 .tableContainer {
-    flex: 1;
-    overflow: auto;
+    overflow-x: auto;
+    width: 100%;
 }
 
 .dataTable {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 800px;
 }
 
 .dataTable th {
     position: sticky;
     top: 0;
     background: #f8fafc;
-    padding: 0.75rem 2rem;
+    padding: 1rem 1.5rem;
     text-align: left;
     font-size: 0.75rem;
     text-transform: uppercase;
@@ -398,12 +488,17 @@
 }
 
 .dataTable td {
-    padding: 1rem 2rem;
+    padding: 1.25rem 1.5rem;
     border-bottom: 1px solid #f1f5f9;
     background: #ffffff;
     color: #334155;
     font-size: 0.9rem;
     transition: background-color 0.15s ease;
+    vertical-align: middle;
+}
+
+.dataTable tr:last-child td {
+    border-bottom: none;
 }
 
 .dataTable tr:hover td {
@@ -480,6 +575,20 @@
     border: 1px solid #a7f3d0;
 }
 
+.statusFail {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    color: #e11d48;
+    font-weight: 700;
+    font-size: 0.75rem;
+    background: #fff1f2;
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+    border: 1px solid #fecdd3;
+}
+
 /* Loading State */
 .loadingContainer {
     flex: 1;
@@ -541,99 +650,4 @@
     max-width: 400px;
     font-size: 0.95rem;
     line-height: 1.5;
-}
-
-/* Tabs */
-.tabsContainer {
-    display: flex;
-    gap: 1rem;
-    padding: 0 2rem 1rem 2rem;
-    border-bottom: 1px solid #e2e8f0;
-    background: #ffffff;
-}
-
-.tabBtn {
-    background: transparent;
-    border: none;
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #64748b;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.tabBtn:hover {
-    color: #0f172a;
-}
-
-.tabActive {
-    color: #2563eb;
-    border-bottom: 2px solid #2563eb;
-}
-
-/* Rejected Styles */
-.statusFail {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.35rem;
-    color: #dc2626;
-    /* Red 600 */
-    font-weight: 700;
-    font-size: 0.75rem;
-    background: #fef2f2;
-    /* Red 50 */
-    padding: 0.35rem 0.75rem;
-    border-radius: 9999px;
-    border: 1px solid #fca5a5;
-    /* Red 300 */
-}
-
-/* Sector Summary Grid */
-.sectorGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    padding: 2rem;
-}
-
-.sectorCard {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-}
-
-.sectorName {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #0f172a;
-    margin-bottom: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.sectorStatRow {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.5rem;
-    font-size: 0.85rem;
-}
-
-.sectorStatLabel {
-    color: #64748b;
-    font-weight: 600;
-}
-
-.sectorStatValue {
-    font-weight: 700;
-    color: #334155;
 }
