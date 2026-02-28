@@ -34,9 +34,13 @@ const OptimizationDashboard = () => {
     };
 
     useEffect(() => {
-        fetchOptimizationLogs();
+        const delayDebounceFn = setTimeout(() => {
+            fetchOptimizationLogs();
+        }, 400); // 400ms debounce for real-time reactivity
+
+        return () => clearTimeout(delayDebounceFn);
         // eslint-disable-next-line
-    }, []);
+    }, [budget, wRev, wEmp]);
 
     const handleSliderChange = (type, value) => {
         let newRev = wRev;
@@ -137,15 +141,7 @@ const OptimizationDashboard = () => {
                         </div>
                     </div>
 
-                    {/* Simulation Button strictly placed below sliders */}
-                    <button
-                        onClick={fetchOptimizationLogs}
-                        disabled={loading}
-                        className={styles.runButton}
-                    >
-                        {loading ? <RefreshCw className="animate-spin" size={18} /> : null}
-                        {loading ? 'Optimizing...' : 'Run Simulation'}
-                    </button>
+                    {/* Realtime automatically updates */}
 
                     {/* Left Side Summary Stats box */}
                     {results && results.summary && !loading && (
