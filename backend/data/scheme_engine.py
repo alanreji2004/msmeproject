@@ -10,14 +10,14 @@ def load_data():
     return msme_df, scheme_df
 
 def check_eligibility(msme, scheme):
-    # Sector check
-    sector_match = scheme['Eligible_Sectors'] == 'All' or msme['Sector'] in scheme['Eligible_Sectors']
+    # Sector check (substring match for cases where scheme allows multiple e.g. "Manufacturing, IT")
+    sector_match = 'all' in str(scheme['Eligible_Sectors']).lower() or str(msme['Sector']).lower() in str(scheme['Eligible_Sectors']).lower()
     
-    # Category check
-    cat_match = scheme['Target_Category'] == 'All' or msme['Category'] == scheme['Target_Category']
+    # Category check (Target_Category in Scheme maps to Enterprise_Size in MSME: Micro/Small/Medium)
+    cat_match = 'all' in str(scheme['Target_Category']).lower() or str(msme['Enterprise_Size']).lower() in str(scheme['Target_Category']).lower()
     
     # Location check
-    loc_match = scheme['Location_Criteria'] == 'All' or scheme['Location_Criteria'] == 'Urban/Rural' or msme['Location_Type'] == scheme['Location_Criteria']
+    loc_match = 'all' in str(scheme['Location_Criteria']).lower() or 'urban/rural' in str(scheme['Location_Criteria']).lower() or str(msme['Location_Type']).lower() in str(scheme['Location_Criteria']).lower()
     
     return sector_match and cat_match and loc_match
 
@@ -68,15 +68,15 @@ def get_msme_schemes(msme_dict):
     
     for _, scheme in scheme_df.iterrows():
         # Sector check
-        sector_match = scheme['Eligible_Sectors'] == 'All' or msme_dict.get('Sector') in scheme['Eligible_Sectors']
+        sector_match = 'all' in str(scheme['Eligible_Sectors']).lower() or str(msme_dict.get('Sector', '')).lower() in str(scheme['Eligible_Sectors']).lower()
         
         # Category check
-        cat_match = scheme['Target_Category'] == 'All' or msme_dict.get('Category') == scheme['Target_Category']
+        cat_match = 'all' in str(scheme['Target_Category']).lower() or str(msme_dict.get('Enterprise_Size', '')).lower() in str(scheme['Target_Category']).lower()
         
         # Location check
-        loc_type = msme_dict.get('Location_Type')
-        loc_criteria = scheme['Location_Criteria']
-        loc_match = loc_criteria == 'All' or loc_criteria == 'Urban/Rural' or loc_type == loc_criteria
+        loc_type = str(msme_dict.get('Location_Type', '')).lower()
+        loc_criteria = str(scheme['Location_Criteria']).lower()
+        loc_match = 'all' in loc_criteria or 'urban/rural' in loc_criteria or loc_type in loc_criteria
         
         if sector_match and cat_match and loc_match:
             impact_percent = scheme['Impact_Factor_Revenue (%)']
@@ -94,11 +94,11 @@ def get_msme_schemes(msme_dict):
                 "Before_Revenue": float(before_rev),
                 "Projected_After_Revenue": float(after_rev),
                 "Revenue_Gain": float(after_rev - before_rev),
-                "Subsidy_Cap": float(scheme['Max_Subsidy_Cap (INR)'])
+                "Subsidy_Cap": float(scheme['Max_Subsidy_Amount'])
             })
             
     # Sort eligible schemes by Revenue Gain descending, limit to 5
-    eligible_schemes = sorted(eligible_schemes, key=lambda x: x['Revenue_Gain'], reverse=True)[:5]
+    eligible_schemes = sorted(eligible_schemes, key=lambda x: x.get('Revenue_Gain', 0), reverse=True)[:5]
     
     if len(eligible_schemes) > 0:
         eligible_schemes[0]['Recommended'] = True
