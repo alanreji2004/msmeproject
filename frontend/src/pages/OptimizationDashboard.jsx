@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { RefreshCw, CheckSquare, Coins, IndianRupee, Briefcase, Settings, AlertCircle, LayoutDashboard, XCircle } from 'lucide-react';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import { Line } from 'react-chartjs-2';
+import { RefreshCw, CheckSquare, Coins, IndianRupee, Briefcase, Settings, AlertCircle, LayoutDashboard, XCircle, TrendingUp } from 'lucide-react';
 import SectorCharts from '../components/SectorCharts';
 import styles from './OptimizationDashboard.module.css';
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const OptimizationDashboard = () => {
     const [budget, setBudget] = useState(100000000);
@@ -13,6 +17,7 @@ const OptimizationDashboard = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [activeTab, setActiveTab] = useState('allocated');
+    const [tradeoffData, setTradeoffData] = useState(null);
 
     const fetchOptimizationLogs = async () => {
         setLoading(true);
@@ -56,6 +61,91 @@ const OptimizationDashboard = () => {
 
         setWRev(Number(newRev.toFixed(2)));
         setWEmp(Number(newEmp.toFixed(2)));
+    };
+
+    useEffect(() => {
+        const fetchTradeoff = async () => {
+            try {
+                const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/optimize/tradeoff`, { params: { budget } });
+                setTradeoffData(res.data);
+            } catch (err) {
+                console.error("Tradeoff fetch error", err);
+            }
+        };
+        const delay = setTimeout(fetchTradeoff, 600); // Wait for the user to finish typing budget
+        return () => clearTimeout(delay);
+    }, [budget]);
+
+    const tradeoffChartData = tradeoffData ? {
+        datasets: [
+            {
+                label: 'Trade-off Scenarios',
+                data: tradeoffData.map(d => ({
+                    x: d.revenue_gain,
+                    y: d.jobs_created,
+                    w_rev: d.w_rev,
+                    w_emp: d.w_emp
+                })),
+                borderColor: '#4f46e5',
+                backgroundColor: 'rgba(79, 70, 229, 0.5)',
+                pointBackgroundColor: '#ffffff',
+                pointBorderColor: '#4f46e5',
+                pointBorderWidth: 2,
+                pointRadius: 6,
+                pointHoverRadius: 8,
+                tension: 0.3,
+                showLine: true
+            }
+        ]
+    } : null;
+
+    const tradeoffOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                titleColor: '#1e293b',
+                bodyColor: '#334155',
+                borderColor: '#e2e8f0',
+                borderWidth: 1,
+                padding: 12,
+                displayColors: false,
+                callbacks: {
+                    title: () => null,
+                    label: function (context) {
+                        const pt = context.raw;
+                        return [
+                            `Policy Weight: ${(pt.w_rev * 100).toFixed(0)}% Rev / ${(pt.w_emp * 100).toFixed(0)}% Jobs`,
+                            `Total Revenue Gain: ₹${pt.x.toLocaleString()}`,
+                            `Total Jobs Created: ${pt.y.toLocaleString()}`
+                        ];
+                    }
+                }
+            }
+        },
+        scales: {
+            x: {
+                type: 'linear',
+                position: 'bottom',
+                title: { display: true, text: 'Total Revenue Gain (₹)', font: { weight: '600' } },
+                grid: { color: '#f1f5f9' },
+                ticks: {
+                    callback: function (value) {
+                        if (value >= 10000000) return '₹' + (value / 10000000).toFixed(1) + 'Cr';
+                        if (value >= 100000) return '₹' + (value / 100000).toFixed(1) + 'L';
+                        return '₹' + value.toLocaleString();
+                    }
+                }
+            },
+            y: {
+                type: 'linear',
+                position: 'left',
+                title: { display: true, text: 'Total Jobs Created', font: { weight: '600' } },
+                grid: { color: '#f1f5f9' }
+            }
+        }
     };
 
     return (
@@ -183,6 +273,22 @@ const OptimizationDashboard = () => {
                         <div className={styles.resultsContent}>
                             {/* Sector Charts */}
                             <SectorCharts data={results.sector_stats} />
+
+                            {/* Tradeoff Curve Analysis */}
+                            {tradeoffData && (
+                                <div className={styles.tableSection} style={{ padding: '1.5rem' }}>
+                                    <h3 className={styles.controlLabel} style={{ marginBottom: '1rem' }}>
+                                        <TrendingUp size={16} />
+                                        Revenue-Employment Trade-off Analysis
+                                    </h3>
+                                    <p className="text-sm text-slate-500 mb-4">
+                                        This chart illustrates the trade-off curve between maximizing revenue and maximizing employment for a strictly <strong>₹{budget.toLocaleString()}</strong> budget. Each point represents a different policy weight scenario.
+                                    </p>
+                                    <div style={{ height: '300px' }}>
+                                        <Line data={tradeoffChartData} options={tradeoffOptions} />
+                                    </div>
+                                </div>
+                            )}
 
                             {/* Unified Table Section */}
                             <div className={styles.tableSection}>

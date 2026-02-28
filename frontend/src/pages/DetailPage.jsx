@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
-import { ArrowLeft, TrendingUp, Building, MapPin, Tag } from 'lucide-react';
+import { ArrowLeft, TrendingUp, Building, MapPin, Tag, Zap, CheckCircle2 } from 'lucide-react';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -12,6 +12,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 export default function DetailPage() {
     const { id } = useParams();
     const [msme, setMsme] = useState(null);
+    const [schemes, setSchemes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
@@ -20,6 +21,15 @@ export default function DetailPage() {
             try {
                 const response = await axios.get(`${API_URL}/msme/${id}`);
                 setMsme(response.data);
+
+                try {
+                    const schemeResponse = await axios.get(`${API_URL}/msme/${id}/schemes`);
+                    setSchemes(schemeResponse.data);
+                } catch (schemeErr) {
+                    // It's ok if schemes fail or none are found, we just won't show them
+                    console.log("No schemes found");
+                }
+
             } catch (err) {
                 setError(err.response?.data?.detail || 'Error fetching MSME details');
             } finally {
@@ -167,6 +177,51 @@ export default function DetailPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Advisory Interface: Scheme Simulation */}
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mt-8">
+                <h3 className="text-xl font-bold text-gray-800 mb-4 border-b border-gray-100 pb-3 flex items-center">
+                    <Zap className="w-5 h-5 mr-2 text-indigo-500" />
+                    Advisory Interface: Scheme Simulation (Math Transparent)
+                </h3>
+                {schemes.length > 0 ? (
+                    <div className="overflow-x-auto rounded-lg border border-gray-200">
+                        <table className="min-w-full divide-y divide-gray-200">
+                            <thead className="bg-gray-50">
+                                <tr>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Eligible Scheme</th>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Before Rev</th>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Projected After Rev</th>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Rev Gain</th>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Proj. Jobs</th>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Max Subsidy</th>
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-100">
+                                {schemes.map((s, idx) => (
+                                    <tr key={idx} className={`transition-colors ${s.Recommended ? "bg-indigo-50 border-l-4 border-indigo-500" : "hover:bg-gray-50"}`}>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="flex items-center">
+                                                {s.Recommended && <CheckCircle2 className="w-4 h-4 text-indigo-600 mr-2" />}
+                                                <span className={`text-sm ${s.Recommended ? 'text-indigo-900 font-bold' : 'text-gray-900 font-medium'}`}>{s.Scheme_Name}</span>
+                                            </div>
+                                            {s.Recommended && <p className="text-xs text-indigo-600 mt-1 font-semibold ml-6">Recommended (Max Impact)</p>}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹{(s.Before_Revenue / 100000).toFixed(2)}L</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-green-600">₹{(s.Projected_After_Revenue / 100000).toFixed(2)}L</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">+{(s.Impact_Factor_Revenue_Percent).toFixed(1)}%</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-blue-600">+{s.Impact_Factor_Employment}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹{(s.Subsidy_Cap).toLocaleString()}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                ) : (
+                    <div className="text-center py-8 text-gray-500 bg-gray-50 rounded-lg border border-gray-100">No eligible schemes found for this MSME based on location, sector, and category.</div>
+                )}
+            </div>
+
         </div>
     );
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
     Chart as ChartJS,
@@ -27,6 +27,19 @@ export default function Dashboard() {
     const [loading, setLoading] = useState(false);
     const [metrics, setMetrics] = useState(null);
     const [error, setError] = useState('');
+
+    useEffect(() => {
+        const fetchInitialMetrics = async () => {
+            try {
+                const response = await axios.get(`${API_URL}/metrics`);
+                setMetrics(response.data);
+            } catch (err) {
+                // If 404, the model just hasn't been trained yet
+                console.log('No existing metrics found. Please train the model.');
+            }
+        };
+        fetchInitialMetrics();
+    }, []);
 
     const handleTrain = async () => {
         setLoading(true);
@@ -87,8 +100,8 @@ export default function Dashboard() {
         <div className="space-y-6">
             <div className="flex justify-between items-center bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <div>
-                    <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">Model Dashboard</h1>
-                    <p className="text-gray-500 mt-1">Train and evaluate the Random Forest model</p>
+                    <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">Predictive Growth Dashboard</h1>
+                    <p className="text-gray-500 mt-1">Converts Random Forest predictions into a 0-100 Growth Score using class probabilities.</p>
                 </div>
                 <button
                     onClick={handleTrain}

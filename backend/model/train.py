@@ -1,4 +1,5 @@
 import os
+import json
 import joblib
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
@@ -44,9 +45,15 @@ def train_model():
     
     save_predicted_data(df)
     
-    return {
+    metrics = {
         "accuracy": accuracy,
         "confusion_matrix": conf_matrix.tolist(),
         "classification_report": class_report,
         "feature_importance": importance_dict
     }
+    
+    metrics_path = os.path.join(MODEL_DIR, 'metrics.json')
+    with open(metrics_path, 'w') as f:
+        json.dump(metrics, f)
+        
+    return metrics

@@ -6,6 +6,14 @@ from services.preprocessing import preprocess_data
 MODEL_DIR = os.path.dirname(__file__)
 MODEL_PATH = os.path.join(MODEL_DIR, 'model.pkl')
 
+_cached_model = None
+
+def get_model():
+    global _cached_model
+    if _cached_model is None and os.path.exists(MODEL_PATH):
+        _cached_model = joblib.load(MODEL_PATH)
+    return _cached_model
+
 def get_predictions():
     df = load_predicted_data()
     if df is not None:
@@ -24,8 +32,8 @@ def get_prediction_by_id(msme_id):
             growth_score = msme_dict.get('Growth_Score')
             
             top_features = {}
-            if os.path.exists(MODEL_PATH):
-                model = joblib.load(MODEL_PATH)
+            model = get_model()
+            if model:
                 feature_importances = model.feature_importances_
                 
                 dummy_df = load_predicted_data().head(1)

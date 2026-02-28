@@ -55,5 +55,55 @@ def run_simulation():
     
     return results_df
 
+def get_msme_schemes(msme_dict):
+    """
+    Given a single MSME dictionary, run eligibility checks against all schemes.
+    Return an array of all eligible schemes (up to 5), simulating the before-and-after
+    Revenue and Employment impact for each. Mark the highest-revenue scheme as 'recommended'.
+    """
+    _, scheme_df = load_data()
+    
+    eligible_schemes = []
+    before_rev = msme_dict.get('Annual_Revenue', 0)
+    
+    for _, scheme in scheme_df.iterrows():
+        # Sector check
+        sector_match = scheme['Eligible_Sectors'] == 'All' or msme_dict.get('Sector') in scheme['Eligible_Sectors']
+        
+        # Category check
+        cat_match = scheme['Target_Category'] == 'All' or msme_dict.get('Category') == scheme['Target_Category']
+        
+        # Location check
+        loc_type = msme_dict.get('Location_Type')
+        loc_criteria = scheme['Location_Criteria']
+        loc_match = loc_criteria == 'All' or loc_criteria == 'Urban/Rural' or loc_type == loc_criteria
+        
+        if sector_match and cat_match and loc_match:
+            impact_percent = scheme['Impact_Factor_Revenue (%)']
+            if pd.isna(impact_percent): impact_percent = 0
+            
+            jobs = scheme['Impact_Factor_Employment (Jobs)']
+            if pd.isna(jobs): jobs = 0
+            
+            after_rev = before_rev + (before_rev * (impact_percent / 100))
+            
+            eligible_schemes.append({
+                "Scheme_Name": scheme['Scheme_Name'],
+                "Impact_Factor_Revenue_Percent": float(impact_percent),
+                "Impact_Factor_Employment": int(jobs),
+                "Before_Revenue": float(before_rev),
+                "Projected_After_Revenue": float(after_rev),
+                "Revenue_Gain": float(after_rev - before_rev),
+                "Subsidy_Cap": float(scheme['Max_Subsidy_Cap (INR)'])
+            })
+            
+    # Sort eligible schemes by Revenue Gain descending, limit to 5
+    eligible_schemes = sorted(eligible_schemes, key=lambda x: x['Revenue_Gain'], reverse=True)[:5]
+    
+    if len(eligible_schemes) > 0:
+        eligible_schemes[0]['Recommended'] = True
+        
+    return eligible_schemes
+
 if __name__ == "__main__":
     run_simulation()

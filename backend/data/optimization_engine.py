@@ -139,18 +139,45 @@ def run_optimization(budget, w_rev, w_emp):
             "Total_Budget_Spent": budget - current_budget,
             "Total_Budget_Remaining": current_budget,
             "Total_MSMEs_Funded": len(selected_allocations),
-            "Total_Projected_Jobs_Created": int(final_df['Jobs_Created'].sum()) if not final_df.empty else 0
+            "Total_Projected_Jobs_Created": int(final_df['Jobs_Created'].sum()) if not final_df.empty else 0,
+            "Total_Projected_Revenue_Gain": int(final_df['Rev_Increase'].sum()) if not final_df.empty else 0
         },
         "allocations": output_df.to_dict(orient="records"),
         "rejected": rejected_allocations,
         "sector_stats": sector_stats
     }
+    return output
+
+def generate_tradeoff_curve(budget: float):
+    """
+    Runs the optimization engine across 6 distinct w_rev vs w_emp scenarios
+    (0.0 to 1.0) to generate the structural points for the Trade-off Curve UI.
+    """
+    points = []
+    for i in range(6):
+        w_rev = round(i * 0.2, 1)
+        w_emp = round(1.0 - w_rev, 1)
+        
+        # Calculate for this specific weight
+        res = run_optimization(budget, w_rev, w_emp)
+        summary = res.get("summary", {})
+        
+        points.append({
+            "w_rev": w_rev,
+            "w_emp": w_emp,
+            "revenue_gain": summary.get("Total_Projected_Revenue_Gain", 0),
+            "jobs_created": summary.get("Total_Projected_Jobs_Created", 0),
+            "msmes_funded": summary.get("Total_MSMEs_Funded", 0)
+        })
+        
+    return points
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run Phase 4: Budget-Constrained Scheme Optimization.")
     parser.add_argument('--budget', type=float, default=50000000.0, help="Total subsidy budget limit allocated")
     parser.add_argument('--w_rev', type=float, default=0.5, help="Weight importance setting for Revenue (0 to 1)")
     parser.add_argument('--w_emp', type=float, default=0.5, help="Weight importance setting for Employment (0 to 1)")
+    parser.add_argument('--tradeoff', action='store_true', help="Generate tradeoff curve points instead of single optimization run")
     
     args = parser.parse_args()
     
